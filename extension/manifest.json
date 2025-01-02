@@ -1,0 +1,12 @@
+{
+  "name": "Bookmarker",
+  "description": "Save to bookmark database",
+  "version": "0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "cool_icon.png"
+  },
+  "permissions": ["bookmarks", "activeTab", "tabs"],
+  "host_permissions": ["https://localhost:4321/*"]
+}
