@@ -2,8 +2,22 @@
 
 ## Base functionality
 
-- everything
+### High priority
 
+- add basic functions
+
+- stop using XMLHttpRequest
+
+- make sure database makes sense
+
+
+### Low priority
+
+- add managing website
+
+- make bookmarks have thumbnails
+
+- make extension connection secure (no idea how)
 
 
 
@@ -11,7 +25,7 @@
 
 # Dev setup
 
-## Create a virtual enviroment
+## Create a virtual enviroment (recommended)
 
 Run: `python -m venv .venv`
 
