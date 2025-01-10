@@ -6,8 +6,8 @@ c = db.cursor()
 c.execute("""
             CREATE TABLE hierarchy (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                parentID INT NOT NULL,
-                childrenID INT,
+                parentID INTEGER NOT NULL,
+                childrenID INTEGER,
                 name TEXT NOT NULL
                 ) STRICT
             """)

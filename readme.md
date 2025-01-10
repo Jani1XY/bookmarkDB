@@ -5,6 +5,10 @@
 ### High priority
 
 - add basic functions
+    - move between folders
+    - delete
+
+- fix firefox extension --- Jani
 
 - stop using XMLHttpRequest
 
@@ -43,4 +47,4 @@ Run: `pip install -r requirements.txt`
 
 
 Create requirements with:
-pip freeze > requirements.txt
+`pip freeze > requirements.txt`
