@@ -27,44 +27,54 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getCurrentTab() {
+function getCurrentTabUrl() {
     return new Promise((resolve, reject) => {
-      chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve(tabs[0].url);
-        }
-      });
+      browser.tabs.query({ active: true, currentWindow: true })
+        .then(tabs => {
+          if (tabs.length > 0) {
+            resolve(tabs[0].url); 
+          } else {
+            reject("No active tab found."); 
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
     });
-}
+  }
 
 function addBookmark()
 {
-    link = "";
-    getCurrentTab()
+    getCurrentTabUrl()
     .then(link => {
-
-        things ={
-            name: document.getElementById("inputName").value,
-            url: link,
-            folder: null
-        }
-
-        things = JSON.stringify(things);
-        console.log(things);
-    
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200)
-            {
-                bmSpan.innerHTML = this.response;
-
-            }
-        };
-        xhttp.open("POST", "http://127.0.0.1:4321/add", true);
-        xhttp.setRequestHeader("Content-Type", "application/json");
-        xhttp.send(things);
-
+      console.log("Current tab URL:", link);
+      
+      things ={
+          name: document.getElementById("inputName").value,
+          url: link,
+          folder: null
+      }
+  
+      things = JSON.stringify(things);
+      console.log(things);
+  
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200)
+          {
+              bmSpan.innerHTML = this.response;
+  
+          }
+      };
+      xhttp.open("POST", "http://127.0.0.1:4321/add", true);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.send(things);
+      console.log("SENT")
+      
     })
+    .catch(error => {
+      console.error("Error getting current tab URL:", error);
+    });
+
+
 }

@@ -3,6 +3,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     statusCheck();
 });
 
+function bmSpanSet(message)
+{document.getElementById("bmSpan").innerHTML = message;}
 
 function statusCheck()
 {
@@ -55,12 +57,24 @@ function addBookmark()
         console.log(things);
     
         var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200)
+        xhttp.onload = function() {
+            if (this.status >= 200 && this.status < 300)
             {
-                bmSpan.innerHTML = this.response;
 
+                console.log("Successfully send data. Server Response: ", this.responseText);
+                console.log("Status Code:", this.status);
+                
+                bmSpanSet(this.responseText);
+                
+            } else {
+                bmSpanSet(this.responseText);
+                console.log("Failed to process. Server Response:", this.responseText);
+                console.error('Error:', this.status, this.statusText);
             }
+        };
+        xhttp.onerror = function() {
+            console.error('Some kind of network error');
+            bmSpanSet("Network error");
         };
         xhttp.open("POST", "http://127.0.0.1:4321/add", true);
         xhttp.setRequestHeader("Content-Type", "application/json");

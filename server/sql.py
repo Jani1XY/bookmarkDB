@@ -4,10 +4,18 @@ db = sqlite3.connect("bookmarks.db", check_same_thread=False)
 c = db.cursor()
 
 def addBM(name, link, folder="root"):
-    print("debug:: link "+str(link))
-    print("debug:: name "+str(name))
-    c.execute(f"INSERT INTO {folder} (name, link) VALUES (?, ?)", (name, link))
-    db.commit()
+    try:
+        c.execute(f"INSERT INTO {folder} (name, link) VALUES (?, ?)", (name, link))
+        db.commit()
+        return True
+    
+    except sqlite3.Error as e:
+        print(f"SQLite Error: {e}")
+        return False
+
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
+        return False
 
 
 
@@ -22,3 +30,7 @@ def printHierarchy():
     #print("id, pID, cID, name")
     for i in c.fetchall():
         print(i)
+
+
+if __name__ == '__main__':
+    printRoot()

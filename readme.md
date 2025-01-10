@@ -8,8 +8,6 @@
 
 - stop using XMLHttpRequest
 
-- make sure database makes sense
-
 
 ### Low priority
 
