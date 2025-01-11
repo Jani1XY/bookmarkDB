@@ -6,8 +6,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
 function bmSpanSet(message)
 {document.getElementById("bmSpan").innerHTML = message;}
 
-function statusCheck()
+async function statusCheck()
 {
+    /*
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200)
@@ -23,6 +24,22 @@ function statusCheck()
     };
     xhttp.open("GET", "http://127.0.0.1:4321/ping", true);
     xhttp.send();
+    */
+    const response = await fetch("http://127.0.0.1:4321/ping");
+
+    try{
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        
+        if(response.status === 200){
+            document.getElementById("status").innerHTML = "ONLINE";
+            document.getElementById("status").style.color = "lightgreen";
+        }
+    }
+    catch(error){
+        console.error(error.message);
+    }
 }
 
 function sleep(ms) {

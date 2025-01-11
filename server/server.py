@@ -16,7 +16,7 @@ def pong():
 
 def options_response():
     return "", 200, {
-        'Access-Control-Allow-Origin': 'chrome-extension://mamcdmfainjkmboboogdekmeebnkbbhc', 
+        'Access-Control-Allow-Origin': '*', 
         'Access-Control-Allow-Methods': 'POST', 
         'Access-Control-Allow-Headers': 'Content-Type'
     }
