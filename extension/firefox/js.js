@@ -4,8 +4,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
 });
 
 
-function statusCheck()
+async function statusCheck()
 {
+    /*
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200)
@@ -21,6 +22,22 @@ function statusCheck()
     };
     xhttp.open("GET", "http://127.0.0.1:4321/ping", true);
     xhttp.send();
+    */
+    const response = await fetch("http://127.0.0.1:4321/ping");
+
+    try{
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        
+        if(response.status === 200){
+            document.getElementById("status").innerHTML = "ONLINE";
+            document.getElementById("status").style.color = "lightgreen";
+        }
+    }
+    catch(error){
+        console.error(error.message);
+    }
 }
 
 function sleep(ms) {
@@ -45,36 +62,65 @@ function getCurrentTabUrl() {
 
 function addBookmark()
 {
-    getCurrentTabUrl()
+    link = "";
+    getCurrentTab()
     .then(link => {
-      console.log("Current tab URL:", link);
-      
-      things ={
-          name: document.getElementById("inputName").value,
-          url: link,
-          folder: null
-      }
-  
-      things = JSON.stringify(things);
-      console.log(things);
-  
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200)
-          {
-              bmSpan.innerHTML = this.response;
-  
+
+        things ={
+            name: document.getElementById("inputName").value,
+            url: link,
+            folder: null
+        }
+
+        things = JSON.stringify(things);
+        console.log(things);
+    
+        /*
+        var xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            if (this.status >= 200 && this.status < 300)
+            {
+
+                console.log("Successfully send data. Server Response: ", this.responseText);
+                console.log("Status Code:", this.status);
+                
+                bmSpanSet(this.responseText);
+                
+            } else {
+                bmSpanSet(this.responseText);
+                console.log("Failed to process. Server Response:", this.responseText);
+                console.error('Error:', this.status, this.statusText);
+            }
+        };
+        xhttp.onerror = function() {
+            console.error('Some kind of network error');
+            bmSpanSet("Network error");
+        };
+        xhttp.open("POST", "http://127.0.0.1:4321/add", true);
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.send(things);
+        */
+        
+        fetch("http://127.0.0.1:4321/add", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',       
+          },
+          body: JSON.stringify(things), 
+        }).then((response) => {
+
+          if (response.ok) {
+            const result = response.json(); 
+            console.log('Success:', result);
+            bmSpanSet('Bookmark added succesfully');
+          } 
+          else {
+            console.error('Error:', response.status, response.statusText);
+            bmSpanSet('Error: ' + 'Status: ' + response.status + ' Status text: ' + response.statusText);
           }
-      };
-      xhttp.open("POST", "http://127.0.0.1:4321/add", true);
-      xhttp.setRequestHeader("Content-Type", "application/json");
-      xhttp.send(things);
-      console.log("SENT")
-      
+        }).catch((error) => {
+          console.error(error.message);
+        });
+    
     })
-    .catch(error => {
-      console.error("Error getting current tab URL:", error);
-    });
-
-
 }
