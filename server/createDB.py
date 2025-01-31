@@ -4,18 +4,26 @@ db = sqlite3.connect("bookmarks.db")
 c = db.cursor()
 
 c.execute("""
-            CREATE TABLE hierarchy (
+            CREATE TABLE folders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                parentID INTEGER NOT NULL,
-                childrenID INTEGER,
+                parentID INTEGER,
                 name TEXT NOT NULL
                 ) STRICT
             """)
 
-c.execute("INSERT INTO hierarchy (id, parentID, name) VALUES (1, 0, 'root')")
+c.execute("""
+            CREATE TABLE children(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            parentID INTEGER NOT NULL,
+            childID INTEGER NOT NULL,
+            
+            FOREIGN KEY(parentID) REFERENCES folders(id),
+            FOREIGN KEY(childID) REFERENCES folders(id)
+            ) STRICT
+        """);
 
 c.execute("""
-            CREATE TABLE root (
+            CREATE TABLE bookmarks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             link TEXT NOT NULL

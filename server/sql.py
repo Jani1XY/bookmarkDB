@@ -3,10 +3,11 @@ import sqlite3
 db = sqlite3.connect("bookmarks.db", check_same_thread=False)
 c = db.cursor()
 
-def addBM(name, link, folder="root"):
+def addBM(name, link, folder=""):
     try:
-        c.execute(f"INSERT INTO {folder} (name, link) VALUES (?, ?)", (name, link))
+        c.execute("INSERT INTO bookmarks (name, link) VALUES (?, ?)", (name, link))
         db.commit()
+        printBookmarks()
         return True
     
     except sqlite3.Error as e:
@@ -19,18 +20,18 @@ def addBM(name, link, folder="root"):
 
 
 
-def printRoot():
-    c.execute("SELECT * FROM root")
+def printBookmarks():
+    c.execute("SELECT * FROM bookmarks")
     for i in c.fetchall():
         print(i)
 
 
-def printHierarchy():
-    c.execute("SELECT * FROM hierarchy")
+def printFolders():
+    c.execute("SELECT * FROM folders")
     #print("id, pID, cID, name")
     for i in c.fetchall():
         print(i)
 
 
 if __name__ == '__main__':
-    printRoot()
+    printBookmarks()

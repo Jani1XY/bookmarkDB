@@ -10,8 +10,6 @@
     - delete bookmark option in the extension
     - move between folders (managed on the website)
 
-- fix firefox extension --- Jani
-
 - stop using XMLHttpRequest
 
 - find a way to not need {'Access-Control-Allow-Origin': '*'} on every return
