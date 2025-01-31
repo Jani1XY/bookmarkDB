@@ -3,6 +3,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     statusCheck();
 });
 
+function bmSpanSet(message)
+{document.getElementById("bmSpan").innerHTML = message;}
 
 async function statusCheck()
 {
@@ -44,7 +46,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getCurrentTabUrl() {
+function getCurrentTab() {
     return new Promise((resolve, reject) => {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(tabs => {
@@ -110,7 +112,7 @@ function addBookmark()
         }).then((response) => {
 
           if (response.ok) {
-            const result = response.json(); 
+            const result = response.json();
             console.log('Success:', result);
             bmSpanSet('Bookmark added succesfully');
           } 
