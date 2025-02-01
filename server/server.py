@@ -12,10 +12,9 @@ def index():
 
 @app.route("/ping")
 def pong():
-    return "pong", 200, {'Access-Control-Allow-Origin': '*'}
+    return jsonify({"message": "pong"}), 200, {'Access-Control-Allow-Origin': '*'}
 
 def options_response():
-    #chrome-extension://mamcdmfainjkmboboogdekmeebnkbbhc
     return "", 200, {
         'Access-Control-Allow-Origin': '*', 
         'Access-Control-Allow-Methods': 'POST', 
@@ -29,12 +28,11 @@ def addBookmark():
         return options_response()
 
     try:
+
         data = json.loads(request.get_json())
 
-        print(data)
-
         if not data:
-            return "Error: No data", 400, {'Access-Control-Allow-Origin': '*'}
+            return jsonify({"message": "No data"}), 400, {'Access-Control-Allow-Origin': '*'}
 
         name = data.get("name")
         url = data.get("url")
@@ -44,7 +42,7 @@ def addBookmark():
         print("url:  " + url)
 
         if url == None:
-            return "Error: Missing required fields", 418, {'Access-Control-Allow-Origin': '*'}
+            return jsonify({"message": "Missing required fields"}), 418, {'Access-Control-Allow-Origin': '*'}
 
 
         if not folder:
@@ -54,17 +52,15 @@ def addBookmark():
 
 
         if not result:
-            return "Error: Failed to add bookmark", 500, {'Access-Control-Allow-Origin': '*'}
+            return jsonify({"message": "Failed to add bookmark"}), 500, {'Access-Control-Allow-Origin': '*'}
 
 
-        return "Message: Bookmark added successfully", 201, {'Access-Control-Allow-Origin': '*'
-        , 'Access-Control-Allow-Methods': 'POST', 
-        'Access-Control-Allow-Headers': 'Content-Type'}
+        return jsonify({"message": "Bookmark added successfully"}), 201, {'Access-Control-Allow-Origin': '*'}
 
 
     except Exception as e:
         print(f"Error adding bookmark: {e}")
-        return "Big error: Internal server error. Check logs", 500, {'Access-Control-Allow-Origin': '*'}
+        return jsonify({"message": "Big internal server error. Check logs"}), 500, {'Access-Control-Allow-Origin': '*'}
     
 
 app.run(host="0.0.0.0", port=4321, debug=True)

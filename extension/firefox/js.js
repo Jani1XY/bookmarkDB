@@ -60,69 +60,71 @@ function getCurrentTab() {
           reject(error);
         });
     });
+}
+
+async function addBookmark()
+{
+  link = await getCurrentTab();
+
+  try{
+    things ={
+        name: document.getElementById("inputName").value,
+        url: link,
+        folder: null
+    }
+
+    things = JSON.stringify(things);
+    console.log(things);
+  
+      /*
+      var xhttp = new XMLHttpRequest();
+      xhttp.onload = function() {
+          if (this.status >= 200 && this.status < 300)
+          {
+
+              console.log("Successfully send data. Server Response: ", this.responseText);
+              console.log("Status Code:", this.status);
+              
+              bmSpanSet(this.responseText);
+              
+          } else {
+              bmSpanSet(this.responseText);
+              console.log("Failed to process. Server Response:", this.responseText);
+              console.error('Error:', this.status, this.statusText);
+          }
+      };
+      xhttp.onerror = function() {
+          console.error('Some kind of network error');
+          bmSpanSet("Network error");
+      };
+      xhttp.open("POST", "http://127.0.0.1:4321/add", true);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.send(things);
+      */
+      
+    response = await fetch("http://127.0.0.1:4321/add", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',       
+      },
+      body: JSON.stringify(things), 
+    })
+    
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(result);
+      console.log('Success:', result.message);
+      bmSpanSet(result.message);
+    } 
+    else {
+      console.error('Error:', response.status, response.statusText);
+      bmSpanSet('Error: ' + 'Status: ' + response.status + ' Status text: ' + response.statusText);
+    }
+
+
+  } catch (error) {
+    console.error(error.message);  
   }
 
-function addBookmark()
-{
-    link = "";
-    getCurrentTab()
-    .then(link => {
-
-        things ={
-            name: document.getElementById("inputName").value,
-            url: link,
-            folder: null
-        }
-
-        things = JSON.stringify(things);
-        console.log(things);
-    
-        /*
-        var xhttp = new XMLHttpRequest();
-        xhttp.onload = function() {
-            if (this.status >= 200 && this.status < 300)
-            {
-
-                console.log("Successfully send data. Server Response: ", this.responseText);
-                console.log("Status Code:", this.status);
-                
-                bmSpanSet(this.responseText);
-                
-            } else {
-                bmSpanSet(this.responseText);
-                console.log("Failed to process. Server Response:", this.responseText);
-                console.error('Error:', this.status, this.statusText);
-            }
-        };
-        xhttp.onerror = function() {
-            console.error('Some kind of network error');
-            bmSpanSet("Network error");
-        };
-        xhttp.open("POST", "http://127.0.0.1:4321/add", true);
-        xhttp.setRequestHeader("Content-Type", "application/json");
-        xhttp.send(things);
-        */
-        
-        fetch("http://127.0.0.1:4321/add", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',       
-          },
-          body: JSON.stringify(things), 
-        }).then((response) => {
-
-          if (response.ok) {
-            const result = response.json();
-            console.log('Success:', result);
-            bmSpanSet('Bookmark added succesfully');
-          } 
-          else {
-            console.error('Error:', response.status, response.statusText);
-            bmSpanSet('Error: ' + 'Status: ' + response.status + ' Status text: ' + response.statusText);
-          }
-        }).catch((error) => {
-          console.error(error.message);
-        });
-    
-    })
 }
