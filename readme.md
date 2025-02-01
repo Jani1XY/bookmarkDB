@@ -10,8 +10,6 @@
     - delete bookmark option in the extension
     - move between folders (managed on the website)
 
-- stop using XMLHttpRequest
-
 - find a way to not need {'Access-Control-Allow-Origin': '*'} on every return
 
 
@@ -48,7 +46,6 @@ Run: `python -m venv .venv`
 On linux run: `source .venv/bin/activate`
 
 On windows run in cmd: `.\venv\Scripts\activate.bat`
-(there is no `.\venv\Scripts\`, oops)
 
 
 ## Install requirements
