@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", (event) => {
     document.getElementById("send").addEventListener("click", addBookmark);
+    document.getElementById("delete").addEventListener("click", deleteBookmark);
     statusCheck();
     checkIfInDatabase();
 });
@@ -41,37 +42,6 @@ async function statusCheck()
     catch(error){
         console.error(error.message);
     }
-}
-
-async function checkIfInDatabase()
-{
-  link = await getCurrentTab();
-
-  try {
-    
-    theLink = {url: link};
-  
-    response = await fetch("http://127.0.0.1:4321/get", {
-    method: "POST",
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(theLink)
-  })
-
-    if (response.ok) {
-      const result = await response.json();
-      console.log(result);
-      console.log('Success:', result.message);
-      
-      bmSpanSet(result.message);
-    } 
-    else {
-      console.error('Error:', response.status, response.statusText);
-      bmSpanSet('Error: ' + 'Status: ' + response.status + ' Status text: ' + response.statusText);
-    }
-
-  } catch (error) {
-      console.error(error);
-  }
 }
 
 function sleep(ms) {
@@ -159,4 +129,80 @@ async function addBookmark()
     console.error(error.message);  
   }
 
+}
+
+
+async function checkIfInDatabase()
+{
+  link = await getCurrentTab();
+
+  try {
+    
+    theLink = {url: link};
+  
+    response = await fetch("http://127.0.0.1:4321/get", {
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(theLink)
+  })
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(result);
+      console.log('Server response:', result.message);
+
+      if (result.exsist)
+      {
+        document.getElementById("delete").disabled = false;
+        document.getElementById("send").disabled = true;
+      }
+      
+    } 
+    else {
+      console.error('Error:', response.status, response.statusText);
+      bmSpanSet('Error: ' + 'Status: ' + response.status + ' Status text: ' + response.statusText);
+    }
+
+  } catch (error) {
+      console.error(error);
+  }
+}
+
+
+async function deleteBookmark()
+{
+  link = await getCurrentTab();
+
+  theLink = {url: link}
+
+  try {
+
+    response = await fetch("http://127.0.0.1:4321/delete/one", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(theLink)
+    })
+
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(result);
+      console.log('Server response:', result.message);
+      bmSpanSet(result.message);
+
+      document.getElementById("delete").disabled = true;
+      document.getElementById("send").disabled = false;
+
+      
+    } 
+    else {
+      console.error('Error:', response.status, response.statusText);
+      bmSpanSet('Error: ' + 'Status: ' + response.status + ' Status text: ' + response.statusText);
+    }
+    
+  } catch (error) {
+    console.error(error);
+  }
+
+  
 }
