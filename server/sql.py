@@ -19,6 +19,41 @@ def addBM(name, link, folder=""):
         return False
 
 
+def getLink(url):
+    try:
+        c.execute("SELECT link FROM bookmarks WHERE link=?",(url,))
+        fetched = c.fetchone()
+        if fetched == None:
+            return False
+
+        if fetched[0] == url:
+            return True
+        
+        return False
+
+    except sqlite3.Error as e:
+        print(f"SQLite Error: {e}")
+        return False
+
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
+        return False
+
+
+def deleteOneLink(url):
+    try:
+        c.execute("DELETE FROM bookmarks WHERE link=?",(url,))
+        db.commit()
+        print("Deleted from database: "+url)
+
+    except sqlite3.Error as e:
+        print(f"SQLite Error: {e}")
+        return False
+
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
+        return False
+
 
 def printBookmarks():
     c.execute("SELECT * FROM bookmarks")

@@ -3,6 +3,11 @@ body{
     color: white;
     width: 200px;
 }
+
 p{
+    color: red;
+}
+
+#delete{
     color: red;
 }

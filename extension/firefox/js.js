@@ -1,6 +1,7 @@
 window.addEventListener("DOMContentLoaded", (event) => {
     document.getElementById("send").addEventListener("click", addBookmark);
     statusCheck();
+    checkIfInDatabase();
 });
 
 function bmSpanSet(message)
@@ -42,6 +43,37 @@ async function statusCheck()
     }
 }
 
+async function checkIfInDatabase()
+{
+  link = await getCurrentTab();
+
+  try {
+    
+    theLink = {url: link};
+  
+    response = await fetch("http://127.0.0.1:4321/get", {
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(theLink)
+  })
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(result);
+      console.log('Success:', result.message);
+      
+      bmSpanSet(result.message);
+    } 
+    else {
+      console.error('Error:', response.status, response.statusText);
+      bmSpanSet('Error: ' + 'Status: ' + response.status + ' Status text: ' + response.statusText);
+    }
+
+  } catch (error) {
+      console.error(error);
+  }
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -71,7 +103,7 @@ async function addBookmark()
         name: document.getElementById("inputName").value,
         url: link,
         folder: null
-    }
+    };
 
     things = JSON.stringify(things);
     console.log(things);
@@ -105,7 +137,7 @@ async function addBookmark()
     response = await fetch("http://127.0.0.1:4321/add", {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',       
+        'Content-Type': 'application/json'      
       },
       body: JSON.stringify(things), 
     })

@@ -7,8 +7,10 @@
 - add basic functions
     - folder selector in the extension
     - option to create new folder in extension
-    - delete bookmark option in the extension
     - move between folders (managed on the website)
+    - add confirmation when pressing delete on extension
+
+- website displays every bookmark
 
 - find a way to not need {'Access-Control-Allow-Origin': '*'} on every return
 
@@ -23,12 +25,6 @@
 - make bookmarks have thumbnails
 
 - make extension connection secure (no idea how)
-
-
-## Dilemma
-
-- should duplicate bookmarks be alowed?
-
 
 
 

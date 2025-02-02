@@ -28,8 +28,7 @@ def addBookmark():
         return options_response()
 
     try:
-
-        data = json.loads(request.get_json())
+        data = request.get_json()
 
         if not data:
             return jsonify({"message": "No data"}), 400, {'Access-Control-Allow-Origin': '*'}
@@ -38,8 +37,8 @@ def addBookmark():
         url = data.get("url")
         folder = data.get("folder")
 
-        print("name:  " + name)
-        print("url:  " + url)
+        print("added name:  " + name)
+        print("added url:  " + url)
 
         if url == None:
             return jsonify({"message": "Missing required fields"}), 418, {'Access-Control-Allow-Origin': '*'}
@@ -61,7 +60,50 @@ def addBookmark():
     except Exception as e:
         print(f"Error adding bookmark: {e}")
         return jsonify({"message": "Big internal server error. Check logs"}), 500, {'Access-Control-Allow-Origin': '*'}
+
+
+@app.route("/get", methods=["POST", "OPTIONS"])
+def doesLinkExsist():
+    if request.method == "OPTIONS":
+        return options_response();
+
+    try:
+        data = request.get_json()
+
+        url = data.get("url")
+
+        if not data:
+            return jsonify({"message": "No data"}), 400, {'Access-Control-Allow-Origin': '*'}
     
+
+        if getLink(url):
+            return jsonify({"message": "URL exsists", "exsist": True}), 200, {'Access-Control-Allow-Origin': '*'}
+        else:
+            return jsonify({"message": "URL doesn't exsist", "exsist": False}), 200, {'Access-Control-Allow-Origin': '*'}
+    
+    except Exception as e:
+        print(f"Error getting link: {e}")
+        return jsonify({"message": "Big internal server error. Check logs"}), 500, {'Access-Control-Allow-Origin': '*'}
+
+
+
+@app.route("/delete/one", methods=["POST", "OPTIONS"])
+def deleteOne():
+    if request.method == "OPTIONS":
+        return options_response();
+
+    try:
+        data = request.get_json()
+
+        url = data.get("url")
+
+        deleteOneLink(url)
+
+        return jsonify({"message": "Deleted bookmark"}), 200, {'Access-Control-Allow-Origin': '*'}
+        
+    except Exception as e:
+        print(f"Error getting link: {e}")
+        return jsonify({"message": "Big internal server error. Check logs"}), 500, {'Access-Control-Allow-Origin': '*'}
 
 app.run(host="0.0.0.0", port=4321, debug=True)
 #serve(app, host="0.0.0.0", port=4321)
